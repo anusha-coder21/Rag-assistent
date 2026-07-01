@@ -1,4 +1,15 @@
 def chunk_text(text, chunk_size=500, overlap=100):
+    """
+    Split text into overlapping chunks.
+
+    Parameters:
+        text (str): Input text.
+        chunk_size (int): Number of characters per chunk.
+        overlap (int): Overlapping characters between chunks.
+
+    Returns:
+        list: List of text chunks.
+    """
 
     chunks = []
 
@@ -6,7 +17,10 @@ def chunk_text(text, chunk_size=500, overlap=100):
 
     while start < len(text):
         end = start + chunk_size
-        chunks.append(text[start:end])
+
+        chunk = text[start:end]
+        chunks.append(chunk)
+
         start += chunk_size - overlap
 
     return chunks
