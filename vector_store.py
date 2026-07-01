@@ -3,8 +3,8 @@ import numpy as np
 
 class VectorStore:
 
-    def __init__(self, dimension):
-        self.index = faiss.IndexFlatL2(dimension)
+    def __init__(self, embedding_dim=384):
+        self.index = faiss.IndexFlatL2(embedding_dim)
         self.chunks = []
 
     def add(self, embeddings, chunks):
