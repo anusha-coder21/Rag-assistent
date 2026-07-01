@@ -1,6 +1,5 @@
+numpy>=1.23
 faiss-cpu
-sentence-transformers
-pypdf
 ollama
+pypdf
 python-dotenv
-numpy
