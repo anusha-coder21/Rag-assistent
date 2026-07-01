@@ -8,7 +8,18 @@ import ollama
 # Load PDF
 text = load_pdf("data/BCS602-module-1-pdf (1).pdf")
 
-# Chunk
+# CLEAN TEXT (ADD HERE)
+import re
+
+def clean_text(text):
+    text = re.sub(r'\s+', ' ', text)
+    text = text.replace("", "-")
+    text = text.replace("‐", "-")
+    return text.strip()
+
+text = clean_text(text)
+
+# THEN CHUNK
 chunks = chunk_text(text)
 
 # Embeddings for documents
@@ -30,7 +41,7 @@ while True:
     context_chunks = retriever.get_relevant_chunks(query)
 
     context = "\n".join(
-        [f"Chunk {i+1}:\n{chunk.strip()}" for i, chunk in enumerate(context_chunks)]
+    chunk.replace("\n", " ").strip() for chunk in context_chunks
     )
 
     print("\n🔍 Retrieved Context:\n", context)
@@ -42,20 +53,27 @@ while True:
         {
             "role": "system",
             "content": """
-You are an expert academic tutor.
+You are an academic assistant.
 
-Your job:
-Convert the given context into CLEAN STUDY NOTES.
+TASK:
+Convert context into clean exam notes.
 
-RULES:
-- Do NOT repeat chunks
-- Do NOT copy raw text
-- Do NOT show "context"
-- Always structure answers like exam notes
-- Use headings and bullet points
-- Keep meaning 100% accurate
-- If multiple points exist, organize them logically
-- If answer is missing, say: "Not found in document"
+STRICT RULES:
+- Do NOT copy text exactly
+- Do NOT hallucinate new words
+- Do NOT repeat phrases
+- Remove broken words or artifacts
+- Fix grammar automatically
+- Output must be clean Markdown notes
+
+FORMAT:
+# Title
+## Definition
+## Explanation
+## Key Points
+## Summary
+
+If information is unclear, simplify it instead of copying noise.
 """
         },
         {
